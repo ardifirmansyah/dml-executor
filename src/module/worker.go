@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"dml-executor/src"
@@ -185,7 +186,10 @@ func (w *worker) getLastID() int64 {
 		return 0
 	}
 
-	id, err := strconv.ParseInt(string(d), 10, 64)
+	dd := string(d)
+	dd = strings.Replace(dd, "\n", "", -1)
+
+	id, err := strconv.ParseInt(dd, 10, 64)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
