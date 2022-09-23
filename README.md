@@ -20,6 +20,7 @@ Below are the sample configuration.
   "job_interval": 1,
   "table_name": "sample_table",
   "column_name": "sample_column",
+  "reference_column": "id",
   "job_type": "set_empty"
 }
 ```

@@ -26,23 +26,31 @@ type worker struct {
 	logger       *logrus.Logger
 	rowsAffected []int64
 
-	tableName  string
-	columnName string
-	jobType    string
-	interval   int64
-	batchLimit int64
+	tableName       string
+	columnName      string
+	referenceColumn string
+	jobType         string
+	interval        int64
+	batchLimit      int64
 }
 
 func New(conf *src.Configuration, db *sqlx.DB) *worker {
+	if conf.TableName == "" ||
+		conf.ColumnName == "" ||
+		conf.ReferenceColumn == "" {
+		log.Fatal("invalid config")
+	}
+
 	return &worker{
-		db:           db,
-		logger:       initLog(),
-		rowsAffected: make([]int64, 0, 3),
-		tableName:    conf.TableName,
-		columnName:   conf.ColumnName,
-		jobType:      conf.JobType,
-		interval:     conf.JobInterval,
-		batchLimit:   conf.JobBatchLimit,
+		db:              db,
+		logger:          initLog(),
+		rowsAffected:    make([]int64, 0, 3),
+		tableName:       conf.TableName,
+		columnName:      conf.ColumnName,
+		referenceColumn: conf.ReferenceColumn,
+		jobType:         conf.JobType,
+		interval:        conf.JobInterval,
+		batchLimit:      conf.JobBatchLimit,
 	}
 }
 
@@ -144,8 +152,8 @@ func (w *worker) validateRowsAffected(rc int64) error {
 }
 
 func (w *worker) SetColumnEmptyString(start, end int64) (int64, error) {
-	q := fmt.Sprintf(`UPDATE %s SET %s = '' WHERE id BETWEEN $1 AND $2 AND %s <> ''`,
-		w.tableName, w.columnName, w.columnName)
+	q := fmt.Sprintf(`UPDATE %s SET %s = '' WHERE %s BETWEEN $1 AND $2 AND %s <> ''`,
+		w.tableName, w.columnName, w.referenceColumn, w.columnName)
 	query := w.db.Rebind(q)
 
 	rs, err := w.db.Exec(query, start, end)
