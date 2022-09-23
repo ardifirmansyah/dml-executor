@@ -14,9 +14,10 @@ type Configuration struct {
 	JobBatchLimit int64 `json:"job_batch_limit"`
 	JobInterval   int64 `json:"job_interval"`
 
-	TableName  string `json:"table_name"`
-	ColumnName string `json:"column_name"`
-	JobType    string `json:"job_type"`
+	TableName       string `json:"table_name"`
+	ColumnName      string `json:"column_name"`
+	ReferenceColumn string `json:"reference_column"`
+	JobType         string `json:"job_type"`
 }
 
 var Config *Configuration

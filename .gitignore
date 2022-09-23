@@ -1,4 +1,7 @@
 config/
 log/
+bin/
 
 /dml-executor
+/main-darwin-amd64
+/lastID.d
