@@ -153,7 +153,7 @@ func (w *worker) validateRowsAffected(rc int64) error {
 }
 
 func (w *worker) SetColumnEmptyString(start, end int64) (int64, error) {
-	q := fmt.Sprintf(`UPDATE %s SET %s = '' WHERE %s BETWEEN $1 AND $2 AND %s <> ''`,
+	q := fmt.Sprintf(`UPDATE %s SET %s = '' WHERE %s BETWEEN ? AND ? AND %s <> ''`,
 		w.tableName, w.columnName, w.referenceColumn, w.columnName)
 	query := w.db.Rebind(q)
 
