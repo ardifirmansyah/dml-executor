@@ -47,10 +47,19 @@ func (d *DB) getConnectionString() {
 	password, _ := terminal.ReadPassword(0)
 	fmt.Println()
 
-	d.Conn = strings.Replace(fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=disable",
-		username, password,
-		d.Host, d.DBName,
-	), "\n", "", -1)
+	if d.Type == "mysql" {
+		d.Conn = strings.Replace(fmt.Sprintf(`%s:%s@tcp(%s)/%s?parseTime=true&loc=Local`,
+			username, password,
+			d.Host, d.DBName,
+		), "\n", "", -1)
+	} else if d.Type == "postgres" {
+		d.Conn = strings.Replace(fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=disable",
+			username, password,
+			d.Host, d.DBName,
+		), "\n", "", -1)
+	} else {
+		log.Fatal("invalid database type")
+	}
 }
 
 //Connect to database from config and Ping the connection

@@ -1,6 +1,7 @@
 config/
 log/
 bin/
+.idea/
 
 /dml-executor
 /main-darwin-amd64
